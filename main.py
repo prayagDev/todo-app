@@ -5,12 +5,16 @@ from pydantic import BaseModel
 import math
 import pymongo
 from bson import ObjectId
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 # MongoDB Setup
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+myclient = pymongo.MongoClient(MONGO_URI)
 todo_db = myclient["todo_app"]
 todo_col = todo_db["todo"]
 
