@@ -1,0 +1,25 @@
+<div class="p-2">
+    <h2 class="text-xl font-bold mb-4">Edit Task</h2>
+    
+    <form hx-post="/tasks/update/{{ task._id }}" 
+          hx-target="#todo-list-container" 
+          onsubmit="closeModal()">
+        
+        <label class="block text-sm font-medium text-gray-600">Subject</label>
+        <input type="text" name="subject" value="{{ task.subject }}" 
+               class="w-full border p-2 mb-4 rounded focus:ring-2 focus:ring-blue-400 outline-none">
+        
+        <label class="block text-sm font-medium text-gray-600">Description</label>
+        <textarea name="description" rows="5" 
+                  class="w-full border p-2 mb-4 rounded focus:ring-2 focus:ring-blue-400 outline-none">{{ task.description }}</textarea>
+        
+        <div class="flex justify-end space-x-2">
+            <button type="button" onclick="closeModal()" 
+                    class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+            <button type="submit" 
+                    class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>

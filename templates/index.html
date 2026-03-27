@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTMX ToDo App</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <div class="bg-white p-6 rounded shadow">
+            <h2 class="text-xl font-bold mb-4">Create New Task</h2>
+            <form hx-post="/tasks" hx-target="#todo-list-container"
+            hx-on::after-request="if(event.detail.successful) this.reset()"
+          class="space-y-4">
+                <input type="text" name="subject" placeholder="Subject" class="w-full border p-2 mb-2 rounded" required>
+                <textarea name="description" placeholder="Description" class="w-full border p-2 mb-2 rounded" required></textarea>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Task</button>
+            </form>
+        </div>
+
+        <div class="bg-white p-6 rounded shadow">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Tasks</h2>
+                <select name="status" class="border p-1 rounded" 
+                        hx-get="/tasks" hx-target="#todo-list-container">
+                    <option value="open">Open</option>
+                    <option value="complete">Completed</option>
+                </select>
+            </div>
+            <div id="todo-list-container" hx-get="/tasks" hx-trigger="load">
+                </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal" onclick="if(event.target == this) this.classList.remove('show')">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto" id="modal-content">
+            </div>
+    </div>
+
+    <script>
+        // Close modal helper
+        function closeModal() { document.getElementById('modal').classList.remove('show'); }
+        // Open modal listener
+        document.body.addEventListener('htmx:afterSwap', (e) => {
+            if (e.detail.target.id === "modal-content") {
+                document.getElementById('modal').classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>

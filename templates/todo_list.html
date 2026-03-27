@@ -1,0 +1,29 @@
+<ul class="divide-y">
+    {% for task in tasks %}
+    <li class="py-3 flex justify-between items-center">
+        <span class="cursor-pointer text-blue-600 hover:underline" 
+              hx-get="/tasks/{{ task._id }}" hx-target="#modal-content">
+            {{ task.subject }}
+        </span>
+        
+        <div class="space-x-2">
+            {% if status == 'open' %}
+            <button class="text-sm bg-yellow-400 px-2 py-1 rounded"
+                    hx-get="/tasks/{{ task._id }}?edit=true" hx-target="#modal-content">Edit</button>
+            <button class="text-sm bg-green-500 text-white px-2 py-1 rounded"
+                    hx-post="/tasks/complete/{{ task._id }}" hx-target="#todo-list-container">Done</button>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="mt-4 flex justify-center space-x-2">
+    {% if current_page > 1 %}
+    <button hx-get="/tasks?status={{status}}&page={{current_page - 1}}" hx-target="#todo-list-container" class="px-2 border">Prev</button>
+    {% endif %}
+    <span>Page {{current_page}} of {{total_pages}}</span>
+    {% if current_page < total_pages %}
+    <button hx-get="/tasks?status={{status}}&page={{current_page + 1}}" hx-target="#todo-list-container" class="px-2 border">Next</button>
+    {% endif %}
+</div>
